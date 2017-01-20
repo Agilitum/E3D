@@ -9,9 +9,12 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import com.e3d.ui.tasks.TaskListRecyclerViewAdapter
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -21,20 +24,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
+        //***** Floating Action Button *****//
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
+        //***** Navigation Drawer *****//
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.setDrawerListener(toggle)
         toggle.syncState()
 
+        //***** NavigationView *****//
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
+
+        //***** Task List RecyclerView Init *****//
+        var taskListRecyclerView = findViewById(R.id.recycler_view_task_list) as RecyclerView
+        taskListRecyclerView.setLayoutManager(LinearLayoutManager(this))
+        var trendingMoviesRecyclerViewAdapter = TaskListRecyclerViewAdapter()
+        taskListRecyclerView.setAdapter(trendingMoviesRecyclerViewAdapter)
     }
 
     override fun onBackPressed() {

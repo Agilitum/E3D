@@ -1,5 +1,6 @@
 package com.e3d
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -15,6 +16,10 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import com.e3d.ui.tasks.TaskListRecyclerViewAdapter
+import com.e3d.ui.tasks.model.Task
+import java.util.*
+
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,10 +48,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
 
         //***** Task List RecyclerView Init *****//
+
+        //TODO: remove test ArrayList
+        var taskList = ArrayList<Task>()
+        taskList.add(Task("Test", "A1", true, "This is just a test", Date()))
+
+
         var taskListRecyclerView = findViewById(R.id.recycler_view_task_list) as RecyclerView
         taskListRecyclerView.setLayoutManager(LinearLayoutManager(this))
-        var trendingMoviesRecyclerViewAdapter = TaskListRecyclerViewAdapter()
-        taskListRecyclerView.setAdapter(trendingMoviesRecyclerViewAdapter)
+        var taskListRecyclerViewAdapter = TaskListRecyclerViewAdapter(taskList)
+        taskListRecyclerView.setAdapter(taskListRecyclerViewAdapter)
+
+
+        //***** TaskListRecyclerViewAdapater onItemClickListener *****//
+        taskListRecyclerViewAdapter.SetOnItemClickListener(object : TaskListRecyclerViewAdapter.OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                var taskDetailView = Intent(applicationContext, TaskActivity::class.java)
+                var taskDetailViewExtra = taskDetailView.putExtra("position", position)
+                startActivity(taskDetailView)
+            }
+        })
     }
 
     override fun onBackPressed() {

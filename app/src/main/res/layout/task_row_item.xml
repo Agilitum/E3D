@@ -40,7 +40,9 @@
                 app:srcCompat="@android:drawable/btn_radio"
                 android:id="@+id/image_task_project_list"
                 android:layout_weight="0.1"
-                android:layout_width="0dp"/>
+                android:layout_width="0dp"
+                android:cropToPadding="false"
+                android:padding="16dp"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

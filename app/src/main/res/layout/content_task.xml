@@ -9,9 +9,134 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="2dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.e3d.TaskActivity"
     tools:showIn="@layout/activity_task">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/text_task_activity_title"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:text="@android:string/untitled"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_task_activity_title"
+        android:id="@+id/linear_layout_task_activity">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/text_task_activity_urgency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_task_activity_title"
+                android:layout_alignParentStart="true"
+                android:id="@+id/text_task_activity_urgency"
+                android:textStyle="normal|italic"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_task_activity_urgency_editable"
+                android:layout_weight="1"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="@android:string/untitled"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:text="Project List Task:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_task_activity_urgency"
+                android:layout_alignParentStart="true"
+                android:id="@+id/text_task_activity_project_list"
+                android:textStyle="normal|italic"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                />
+
+            <ImageView
+                android:layout_width="39dp"
+                android:layout_height="match_parent"
+                android:id="@+id/image_task_activity_project_list_editable"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="Deadline:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_task_activity_project_list"
+                android:layout_alignParentStart="true"
+                android:id="@+id/text_task_activity_deadline"
+                android:textStyle="normal|italic"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_task_activity_deadline_editable"
+                android:layout_weight="1"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:paddingLeft="8dp"
+                android:text="Not Set"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:text="Notes:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_task_activity_notes"
+        android:textStyle="normal|italic"
+        android:layout_below="@+id/linear_layout_task_activity"
+        android:layout_alignParentStart="true"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_task_activity_notes_editable"
+        android:layout_below="@+id/text_task_activity_notes"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

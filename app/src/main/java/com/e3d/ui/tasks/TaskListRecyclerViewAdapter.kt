@@ -1,14 +1,11 @@
 package com.e3d.ui.tasks
 
-import android.graphics.drawable.Drawable
-import android.support.v7.widget.DialogTitle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.e3d.R
 import com.e3d.ui.tasks.model.Task
 import java.util.*
@@ -29,9 +26,9 @@ class TaskListRecyclerViewAdapter(var taskList: ArrayList<Task>) : RecyclerView
         var taskProjectList: ImageView
 
         init {
-            taskTitle = itemView.findViewById(R.id.text_task_title) as TextView
-            taskPriorityLvL = itemView.findViewById(R.id.text_task_priority_lvl) as TextView
-            taskProjectList = itemView.findViewById(R.id.image_task_project_list) as ImageView
+            taskTitle = itemView.findViewById(R.id.text_task_row_title) as TextView
+            taskPriorityLvL = itemView.findViewById(R.id.text_task_row_priority_lvl) as TextView
+            taskProjectList = itemView.findViewById(R.id.image_task_row_project_list) as ImageView
             itemView.setOnClickListener(this)
         }
 

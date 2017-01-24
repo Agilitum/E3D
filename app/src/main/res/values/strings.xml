@@ -8,4 +8,5 @@
     <string name="quote_nav_drawer_header">Our life is what our thoughts make of it.\n – Marcus
         Aurelius</string>
     <string name="title_activity_task">TaskActivity</string>
+    <string name="text_task_activity_urgency">Urgency:</string>
 </resources>

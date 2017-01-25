@@ -1,5 +1,6 @@
 package com.e3d
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -8,6 +9,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -15,13 +17,23 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.e3d.ui.tasks.TaskListRecyclerViewAdapter
+import android.widget.EditText
+import android.widget.Toast
+import com.e3d.realm.RealmController
+import com.e3d.ui.tasks.adapter.RealmTaskAdapter
+import com.e3d.ui.tasks.adapter.TaskListRecyclerViewAdapter
 import com.e3d.ui.tasks.model.Task
+import io.realm.Realm
+import io.realm.RealmResults
 import java.util.*
-
+import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private var realm: Realm by Delegates.notNull()
+    private var taskListRecyclerViewAdapter: TaskListRecyclerViewAdapter by Delegates.notNull()
+    private var taskListRecyclerView: RecyclerView by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +48,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .setAction("Action", null).show()
         }
 
+        fab.setOnClickListener {
+            var inflater = this.layoutInflater
+            val content = inflater.inflate(R.layout.content_main_alert_dialog, null)
+
+//            var title = findViewById(R.id.title_activity_main_alert_dialog) as? EditText
+
+            val builder = AlertDialog.Builder(this)
+            builder.setView(content)
+                    .setTitle("Add Task")
+                    .setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which ->
+                        val task = Task()
+                        task.ID = (RealmController.getInstance().getTasks().size + System
+                                .currentTimeMillis())
+
+                        //TDDO: set correct ID's
+//                        task.taskName = (content.findViewById(R.id.title).text.toString())
+//                        task.urgency = (content.findViewById(R.id.urgency).text.toString())
+//                        task.projectListTask = (content.findViewById(R.id.project_list).text
+//                                .toString())
+//                        task.deadline = (content.findViewById(R.id.deadline))
+//                        task.notes = (content.findViewById(R.id.notes).text.toString())
+
+//                        if (title?.text.toString() == "" || title.toString() == "" ) {
+//                            Toast.makeText(this, "Entry not saved, missing title", Toast
+//                                    .LENGTH_SHORT).show()
+//                        } else {
+                            // Persist data easily
+                            realm.beginTransaction()
+                            realm.copyToRealm(task)
+                            realm.commitTransaction()
+
+                            taskListRecyclerViewAdapter.notifyDataSetChanged()
+
+//                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+            val dialog = builder.create()
+            dialog.show()
+        }
+
         //***** Navigation Drawer *****//
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         val toggle = ActionBarDrawerToggle(
@@ -48,26 +100,63 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
 
         //***** Task List RecyclerView Init *****//
-
-        //TODO: remove test ArrayList
-        var taskList = ArrayList<Task>()
-        taskList.add(Task(0, "Test", "A1", true, "This is just a test", Date()))
-
-
-        var taskListRecyclerView = findViewById(R.id.recycler_view_task_list) as RecyclerView
+        taskListRecyclerView = findViewById(R.id.recycler_view_task_list) as RecyclerView
         taskListRecyclerView.setLayoutManager(LinearLayoutManager(this))
-        var taskListRecyclerViewAdapter = TaskListRecyclerViewAdapter(taskList)
+        taskListRecyclerViewAdapter = TaskListRecyclerViewAdapter(this)
         taskListRecyclerView.setAdapter(taskListRecyclerViewAdapter)
 
+        //***** Get Realm Instance *****//
+        realm = RealmController.with(this).getRealm();
+
+//        if (!Prefs.with(this).getPreLoad()) {
+//            setRealmData();
+//        }
+
+        //TODO: remove eventually
+        setRealmData()
+
+        RealmController.getInstance()
+        setRealmAdapter(RealmController.with(this).getTasks())
 
         //***** TaskListRecyclerViewAdapater onItemClickListener *****//
         taskListRecyclerViewAdapter.SetOnItemClickListener(object : TaskListRecyclerViewAdapter.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 var taskDetailView = Intent(applicationContext, TaskActivity::class.java)
-                var taskDetailViewExtra = taskDetailView.putExtra("id", taskList.get(position).ID)
+//                var taskDetailViewExtra = taskDetailView.putExtra("id", .get(position).ID)
                 startActivity(taskDetailView)
             }
         })
+    }
+
+    private fun setRealmData() {
+
+        val tasks = ArrayList<Task>()
+
+        var task = Task()
+        task.ID = (RealmController.getInstance().getTasks().size + System
+                .currentTimeMillis())
+        task.taskName = "Test"
+        task.projectListTask = true
+        task.urgency = "A1"
+        tasks.add(task)
+
+
+        for (t in tasks) {
+            // Persist your data easily
+            realm.beginTransaction()
+            realm.copyToRealm(t)
+            realm.commitTransaction()
+        }
+
+//        Prefs.with(this).setPreLoad(true)
+
+    }
+
+    fun setRealmAdapter(books: RealmResults<Task>) {
+
+        val realmAdapter = RealmTaskAdapter(this.applicationContext, books)
+        taskListRecyclerViewAdapter.setRealmAdapter(realmAdapter)
+        taskListRecyclerViewAdapter.notifyDataSetChanged()
     }
 
     override fun onBackPressed() {

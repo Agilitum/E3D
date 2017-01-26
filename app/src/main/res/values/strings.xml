@@ -9,4 +9,18 @@
         Aurelius</string>
     <string name="title_activity_task">TaskActivity</string>
     <string name="text_task_activity_urgency">Urgency:</string>
+
+
+    // Main Activity Alert Dialog Spinner
+    <string name="choose_urgency">Choose Urgency Level</string>
+
+    <string-array name="urgency_array">
+        <item>Pinned</item>
+        <item>A1</item>
+        <item>A2</item>
+        <item>A3</item>
+        <item>A4</item>
+        <item>B</item>
+        <item>C</item>
+    </string-array>
 </resources>

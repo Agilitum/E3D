@@ -19,8 +19,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
-import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import com.e3d.realm.RealmController
 import com.e3d.ui.tasks.adapter.RealmTaskAdapter
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             var content = inflater.inflate(R.layout.content_main_alert_dialog, null)
 
             var title = content.findViewById(R.id.title_activity_main_alert_dialog) as? EditText
-            var urgency = content.findViewById(R.id.urgency_activity_main_alert_dialog) as? EditText
+            var urgency = content.findViewById(R.id.urgency_activity_main_alert_dialog_spinner) as? Spinner
             var projectListTask = content.findViewById(R.id.check_activity_main_alert_dialog) as? CheckBox
             var deadline = content.findViewById(R.id.date_activity_main_alert_dialog) as? EditText
             var notes = content.findViewById(R.id.notes_activity_main_alert_dialog) as? EditText
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 .currentTimeMillis())
 
                         task.taskName = title?.text.toString()
-                        task.urgency = urgency?.text.toString()
+                        task.urgency = urgency?.selectedItem.toString()
                         task.projectListTask = projectListTask!!.isChecked
                         task.deadline = parseDate(deadline?.text.toString())
                         task.notes = notes?.text.toString()

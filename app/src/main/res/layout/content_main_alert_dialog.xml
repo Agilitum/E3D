@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
@@ -13,23 +14,65 @@
         android:hint="Title"
         android:inputType="text" />
 
-    <EditText
-        android:id="@+id/urgency_activity_main_alert_dialog"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:hint="Urgency"
-        android:inputType="text" />
-
-    <CheckBox
-        android:text="Project List Task"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/check_activity_main_alert_dialog"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:ems="10"
+            android:id="@+id/urgency_activity_main_alert_dialog"
+            android:layout_weight="1"
+            android:hint="Urgency"
+            android:layout_marginLeft="20dp"
+            android:clickable="false"
+            android:textSize="18sp"/>
+
+        <Spinner
+            android:id="@+id/urgency_activity_main_alert_dialog_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/urgency_array"
+            android:prompt="@string/choose_urgency"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal|start"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.01"
+        android:layout_marginTop="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/project_check_activity_main_alert_dialog"
+            android:hint="Project List Task"
+            android:textSize="18sp"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="0.11"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/check_activity_main_alert_dialog"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:layout_marginRight="16dp"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/date_activity_main_alert_dialog"

@@ -1,5 +1,6 @@
 package com.e3d
 
+import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +18,8 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.CheckBox
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import com.e3d.realm.RealmController
@@ -25,6 +28,7 @@ import com.e3d.ui.tasks.adapter.TaskListRecyclerViewAdapter
 import com.e3d.ui.tasks.model.Task
 import io.realm.Realm
 import io.realm.RealmResults
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -50,9 +54,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fab.setOnClickListener {
             var inflater = this.layoutInflater
-            val content = inflater.inflate(R.layout.content_main_alert_dialog, null)
+            var content = inflater.inflate(R.layout.content_main_alert_dialog, null)
 
-//            var title = findViewById(R.id.title_activity_main_alert_dialog) as? EditText
+            var title = content.findViewById(R.id.title_activity_main_alert_dialog) as? EditText
+            var urgency = content.findViewById(R.id.urgency_activity_main_alert_dialog) as? EditText
+            var projectListTask = content.findViewById(R.id.check_activity_main_alert_dialog) as? CheckBox
+            var deadline = content.findViewById(R.id.date_activity_main_alert_dialog) as? EditText
+            var notes = content.findViewById(R.id.notes_activity_main_alert_dialog) as? EditText
 
             val builder = AlertDialog.Builder(this)
             builder.setView(content)
@@ -62,18 +70,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         task.ID = (RealmController.getInstance().getTasks().size + System
                                 .currentTimeMillis())
 
-                        //TDDO: set correct ID's
-//                        task.taskName = (content.findViewById(R.id.title).text.toString())
-//                        task.urgency = (content.findViewById(R.id.urgency).text.toString())
-//                        task.projectListTask = (content.findViewById(R.id.project_list).text
-//                                .toString())
-//                        task.deadline = (content.findViewById(R.id.deadline))
-//                        task.notes = (content.findViewById(R.id.notes).text.toString())
+                        task.taskName = title?.text.toString()
+                        task.urgency = urgency?.text.toString()
+                        task.projectListTask = projectListTask!!.isChecked
+                        task.deadline = parseDate(deadline?.text.toString())
+                        task.notes = notes?.text.toString()
 
-//                        if (title?.text.toString() == "" || title.toString() == "" ) {
-//                            Toast.makeText(this, "Entry not saved, missing title", Toast
-//                                    .LENGTH_SHORT).show()
-//                        } else {
+
+                        if (title!!.text.isNullOrEmpty() || title.text.equals("") || title.text.equals(" ")) {
+                            Toast.makeText(this, "Entry not saved, missing title", Toast
+                                    .LENGTH_SHORT).show()
+                        } else {
                             // Persist data easily
                             realm.beginTransaction()
                             realm.copyToRealm(task)
@@ -81,12 +88,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                             taskListRecyclerViewAdapter.notifyDataSetChanged()
 
-//                        }
+                        }
                     })
                     .setNegativeButton(android.R.string.cancel, DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
             val dialog = builder.create()
             dialog.show()
+
+            // OnClickListener to display DatePickerDialog
+            deadline?.setOnClickListener(View.OnClickListener {
+                val c = Calendar.getInstance()
+
+                val dpd = DatePickerDialog(content.getContext(),
+                        DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                            deadline.setText(dayOfMonth.toString() + "/" + (monthOfYear + 1) +
+                                    "/" + year)
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE))
+                dpd.show()
+            })
         }
+
 
         //***** Navigation Drawer *****//
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -112,9 +132,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            setRealmData();
 //        }
 
-        //TODO: remove eventually
-        setRealmData()
-
         RealmController.getInstance()
         setRealmAdapter(RealmController.with(this).getTasks())
 
@@ -126,30 +143,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(taskDetailView)
             }
         })
-    }
-
-    private fun setRealmData() {
-
-        val tasks = ArrayList<Task>()
-
-        var task = Task()
-        task.ID = (RealmController.getInstance().getTasks().size + System
-                .currentTimeMillis())
-        task.taskName = "Test"
-        task.projectListTask = true
-        task.urgency = "A1"
-        tasks.add(task)
-
-
-        for (t in tasks) {
-            // Persist your data easily
-            realm.beginTransaction()
-            realm.copyToRealm(t)
-            realm.commitTransaction()
-        }
-
-//        Prefs.with(this).setPreLoad(true)
-
     }
 
     fun setRealmAdapter(books: RealmResults<Task>) {
@@ -209,5 +202,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun parseDate(dateString: String) : Date{
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        val date = format.parse(dateString)
+
+        return date
     }
 }

@@ -18,7 +18,7 @@ open class Task : RealmObject() {
 
     internal var taskName: String? = null
     internal var urgency: String? = null
-    internal var projectListTask: Boolean? = null
+    internal var projectListTask: Boolean = false
     internal var notes: String? = null
     internal var deadline: Date? = null
 

@@ -159,7 +159,7 @@ class TaskListRecyclerViewAdapter : RealmRecyclerViewAdapter<Task> {
 
 
     fun setTaskProjectListIndicator(projectListTask: Boolean): Int {
-            if(projectListTask != true) {
+            if(!projectListTask) {
                 return R.drawable.ic_project_task_false
             } else {
                 return R.drawable.ic_project_task_true

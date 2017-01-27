@@ -55,7 +55,7 @@ public class RealmController {
 		return realm.where(Task.class).findAll();
 	}
 
-	public Task getTask(String id){
+	public Task getTask(Long id){
 		return realm.where(Task.class).equalTo("ID", id).findFirst();
 	}
 

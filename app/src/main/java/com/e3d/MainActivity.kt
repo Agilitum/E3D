@@ -28,6 +28,7 @@ import com.e3d.ui.tasks.adapter.TaskListRecyclerViewAdapter
 import com.e3d.ui.tasks.model.Task
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.TaskRealmProxy
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
@@ -137,9 +138,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //***** TaskListRecyclerViewAdapater onItemClickListener *****//
         taskListRecyclerViewAdapter.SetOnItemClickListener(object : TaskListRecyclerViewAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
+            override fun onItemClick( view: View, position: Int) {
                 var taskDetailView = Intent(applicationContext, TaskActivity::class.java)
-//                var taskDetailViewExtra = taskDetailView.putExtra("id", .get(position).ID)
+                var taskID =(taskListRecyclerViewAdapter.getItem(position) as TaskRealmProxy).`realmGet$ID`()
+                taskDetailView.putExtra("id", taskID)
                 startActivity(taskDetailView)
             }
         })

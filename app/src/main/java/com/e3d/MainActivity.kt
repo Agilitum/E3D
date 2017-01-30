@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -25,6 +26,7 @@ import android.widget.Toast
 import com.e3d.realm.RealmController
 import com.e3d.ui.tasks.adapter.RealmTaskAdapter
 import com.e3d.ui.tasks.adapter.TaskListRecyclerViewAdapter
+import com.e3d.ui.tasks.helper.SimpleItemTouchHelperCallback
 import com.e3d.ui.tasks.model.Task
 import io.realm.Realm
 import io.realm.RealmResults
@@ -74,7 +76,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         task.taskName = title?.text.toString()
                         task.urgency = urgency?.selectedItem.toString()
                         task.projectListTask = projectListTask!!.isChecked
-                        task.deadline = parseDate(deadline?.text.toString())
+
+                        if(!deadline?.text.isNullOrEmpty()){
+                            task.deadline = parseDate(deadline?.text.toString())
+                        }
+
                         task.notes = notes?.text.toString()
 
 
@@ -101,8 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 val dpd = DatePickerDialog(content.getContext(),
                         DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                            deadline.setText(dayOfMonth.toString() + "/" + (monthOfYear + 1) +
-                                    "/" + year)
+                            deadline.setText(dayOfMonth.toString() + "/" + (monthOfYear + 1) + "/" + year)
                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE))
                 dpd.show()
             })
@@ -145,6 +150,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(taskDetailView)
             }
         })
+
+        //***** Swipe to remove Callback *****//
+        var callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(taskListRecyclerViewAdapter)
+        var touchHelper: ItemTouchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(taskListRecyclerView)
     }
 
     fun setRealmAdapter(books: RealmResults<Task>) {

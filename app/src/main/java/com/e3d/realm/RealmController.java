@@ -59,4 +59,11 @@ public class RealmController {
 		return realm.where(Task.class).equalTo("ID", id).findFirst();
 	}
 
+	public void removeTask(Long id){
+		Task task = realm.where(Task.class).equalTo("ID", id).findFirst();
+		realm.beginTransaction();
+		task.deleteFromRealm();
+		realm.commitTransaction();
+	}
+
 }
